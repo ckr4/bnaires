@@ -1,0 +1,6 @@
+- path: bnaires
+  name: bnaires
+  type: table
+  description: Current Billionaires (1-25)
+  rows: 25
+  cols: 6

@@ -1,0 +1,17 @@
+path:
+- data.csv
+- data.rds
+type: table
+description: Current Billionaires (1-25)
+rows: 25
+cols: 6
+columns:
+  Name: character
+  NetWorth: character
+  Change: character
+  Age: character
+  Source: character
+  Country: character
+filenames:
+  data.csv: data.csv
+  data.rds: data.rds
