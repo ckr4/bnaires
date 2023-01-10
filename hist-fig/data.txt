@@ -1,0 +1,20 @@
+path:
+- data.csv
+- data.rds
+type: table
+description: Wealthiest Historical Persons (not rulers)
+rows: 5
+cols: 9
+columns:
+  Name: character
+  Source: character
+  NetWorth: numeric
+  Est.year: integer
+  Country: character
+  Name2: character
+  img: character
+  img_src: character
+  lab_col: character
+filenames:
+  data.csv: data.csv
+  data.rds: data.rds

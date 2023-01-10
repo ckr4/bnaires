@@ -10,3 +10,9 @@
   description: Wealthiest Fiction Characters
   rows: 15
   cols: 10
+- path: hist-fig
+  name: hist-fig
+  type: table
+  description: Wealthiest Historical Persons (not rulers)
+  rows: 5
+  cols: 9
