@@ -4,3 +4,9 @@
   description: Current Billionaires (1-25)
   rows: 25
   cols: 7
+- path: fict-char
+  name: fict-char
+  type: table
+  description: Wealthiest Fiction Characters
+  rows: 15
+  cols: 10

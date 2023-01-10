@@ -1,0 +1,21 @@
+path:
+- data.csv
+- data.rds
+type: table
+description: Wealthiest Fiction Characters
+rows: 15
+cols: 10
+columns:
+  Name: character
+  Source: character
+  Source.of.wealth: character
+  NetWorth: numeric
+  Est.year: integer
+  Country: character
+  Name2: character
+  img: character
+  img_src: character
+  lab_col: character
+filenames:
+  data.csv: data.csv
+  data.rds: data.rds
