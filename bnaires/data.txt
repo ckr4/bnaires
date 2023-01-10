@@ -4,14 +4,15 @@ path:
 type: table
 description: Current Billionaires (1-25)
 rows: 25
-cols: 6
+cols: 7
 columns:
   Name: character
-  NetWorth: character
+  NetWorth: numeric
   Change: character
-  Age: character
+  Age: numeric
   Source: character
   Country: character
+  Name2: character
 filenames:
   data.csv: data.csv
   data.rds: data.rds
