@@ -7,7 +7,7 @@ rows: 25
 cols: 7
 columns:
   Name: character
-  NetWorth: numeric
+  NetWorth: character
   Change: character
   Age: numeric
   Source: character
