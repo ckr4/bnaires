@@ -15,4 +15,4 @@
   type: table
   description: Wealthiest Historical Persons (not rulers)
   rows: 10
-  cols: 10
+  cols: 9

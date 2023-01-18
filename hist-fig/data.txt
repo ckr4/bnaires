@@ -4,7 +4,7 @@ path:
 type: table
 description: Wealthiest Historical Persons (not rulers)
 rows: 10
-cols: 10
+cols: 9
 columns:
   Name: character
   Source: character
@@ -15,7 +15,6 @@ columns:
   img: character
   img_src: character
   lab_col: character
-  V10: character
 filenames:
   data.csv: data.csv
   data.rds: data.rds
