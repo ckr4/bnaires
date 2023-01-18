@@ -8,7 +8,7 @@ cols: 9
 columns:
   Name: character
   Source: character
-  NetWorth: character
+  NetWorth: numeric
   Est.year: character
   Country: character
   Name2: character
