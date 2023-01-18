@@ -14,5 +14,5 @@
   name: hist-fig
   type: table
   description: Wealthiest Historical Persons (not rulers)
-  rows: 5
-  cols: 9
+  rows: 10
+  cols: 10

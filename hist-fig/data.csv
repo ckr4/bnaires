@@ -1,8 +1,14 @@
-"Name","Source","NetWorth","Est.year","Country","Name2","img","img_src","lab_col"
-"Jakob Fugger","Merchant, miner and banker",400,2021,"Imperial City of Augsburg","Jakob Fugger","https://i.imgur.com/Q5KOVuG.png","Art by Albrecht Dürer, Public domain, via Wikimedia Commons","#352b21"
-"Andrew Carnegie","Carnegie Steel",404,2017,"United States","Andrew Carnegie","https://i.imgur.com/EATk9o4.png","Photograph by Theodore C. Marceau, Public domain, via Wikimedia Commons","#404040"
-"John D. Rockefeller","Standard Oil",385,2017,"United States","John D.
-Rockefeller","https://i.imgur.com/0hslKLm.png","Photograph by Oscar White, Public domain, via Wikimedia Commons","#0f0f0f"
-"Henry Ford","Ford Motor Company",200,2019,"United States","Henry Ford","https://i.imgur.com/ZoTk5wL.png","Image from Library of Congress, Public domain, via Wikimedia Commons","#3d3d3d"
-"Marcus Lucinius Crassus","Businessman",169.8,2017,"Rome","Marcus Lucinius
-Crassus","https://i.imgur.com/T5l5sg5.png","Image from Wyndham M. Catalogue of the Collection of Greek and Roman Antiquities in the Possession of Lord Leconfield. London, 1915. P. 126","#666666"
+"Name","Source","NetWorth","Est.year","Country","Name2","img","img_src","lab_col","V10"
+"Andrew Carnegie","Carnegie Steel","404","2017","United States","Andrew Carnegie","https://i.imgur.com/EATk9o4.png","Photograph by Theodore C. Marceau, Public domain, via Wikimedia Commons","#404040","Banking"
+"Jakob Fugger","Merchant, miner and banker","400","2021","Imperial City of Augsburg","Jakob Fugger","https://i.imgur.com/Q5KOVuG.png","Art by Albrecht Dürer, Public domain, via Wikimedia Commons","#352b21","Cosimo de'Medici"
+"John D. Rockefeller","Standard Oil","385","2017","United States","John D.
+Rockefeller","https://i.imgur.com/0hslKLm.png","Photograph by Oscar White, Public domain, via Wikimedia Commons","#0f0f0f","129"
+"Cornelius Vanderbilt","Railroads","202","2021","United States","Cornelius
+Vanderbilt","https://i.imgur.com/zIdTpKy.png","Image from Library of Congress, Public domain, via Wikipedia","#313131",""
+"Henry Ford","Ford Motor Company","200","2019","United States","Henry Ford","https://i.imgur.com/ZoTk5wL.png","Image from Library of Congress, Public domain, via Wikimedia Commons","#3d3d3d","2017"
+"Andrew Mellon","Banking, Investments","189","2021","United States","Andrew Mellon","https://i.imgur.com/7QhSKY6.png","Trinity Court Studio, a photography studio in Pittsburgh, Pennsylvania, Public domain, via Wikimedia Commons","#1a1a1a",""
+"Marcus Lucinius Crassus","Businessman","169.8","2017","Rome","Marcus Lucinius
+Crassus","https://i.imgur.com/T5l5sg5.png","Image from Wyndham M. Catalogue of the Collection of Greek and Roman Antiquities in the Possession of Lord Leconfield. London, 1915. P. 126","#666666","Italy"
+"John Jacob Astor","Fur trading, Real estate","168","2021","United States","John Jacob Astor","https://i.imgur.com/kCbNMur.png","http://www.picturehistory.com/product/id/5232, Public domain, via Wikimedia Commons","#222222",""
+"Cosimo de'Medici","Banking","129","2017","Italy","Cosimo de'Medici","https://i.imgur.com/5OdcpUu.png","Art by Jacopo Pontormo, Public domain, via Wikimedia Commons","#2d110f",""
+"Richard Mellon","Banking","103","2021","United States","Richard Mellon","https://i.imgur.com/1XKCHMa.png","Image from National Photo Company Collection, Public domain, via Wikimedia Commons","#1f1f1f",""
