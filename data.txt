@@ -16,3 +16,9 @@
   description: Wealthiest Historical Persons (not rulers)
   rows: 10
   cols: 9
+- path: rich-folk
+  name: rich-folk
+  type: table
+  description: Wealthiest Celebrities
+  rows: 10
+  cols: 6
