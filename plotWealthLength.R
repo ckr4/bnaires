@@ -1,11 +1,9 @@
 # libraries
 library(dplyr)
 library(echarts4r)
-library(echarts4r.assets)
 
 plot_l <- function(c_sel, wealth) {
   
-  print(c_sel)
   # set conversion factor
   # (www.alliantcreditunion.org/money-mentor/the-dollar-bill-believe-it-or-not)
   bill_l <- 6.14 # length in inches
@@ -16,9 +14,6 @@ plot_l <- function(c_sel, wealth) {
   # make selections
   bill_sel <- 100 # set denomination of bill to use (hard coded to 100)
   # c_sel <- c(1:8) # choose subset of up to 10 current billionaires 
-  
-  # set chart title
-  mlab <- paste0("Length of Wealth in $", bill_sel, " Bills Set End to End")
   
   # calculate length of each ind net worth in selected denomination of bills
   length_miles = round(wealth$NetWorth[c_sel]*1000000000 / bill_sel * bill_l / 12 / 5280, -1)
@@ -44,10 +39,16 @@ plot_l <- function(c_sel, wealth) {
         image = "https://i.imgur.com/yB9ivPf.jpg",
         opacity = 1)
     ) %>%
-    e_title("Average distance from Earth\nto the Moon is 250,000 miles", 
-            x='right', padding=list(24,24,0,0), 
+    e_title(paste0("Length of wealth in $100 bills laid end to end\n\n\n", 
+                   "                                                            ",
+                   "                                                            ",
+                   "Average distance from Earth\n",
+                   "                                                        ",
+                   "                                                        ",
+                   "     to the Moon is ~250,000 miles"), 
+            x='left', padding=list(12,12,12,12), 
             textStyle=list(
-              color="white", fontWeight='bold', fontSize=16, lineHeight=20),
+              color="white", fontWeight='bold', fontSize=12, lineHeight=20),
     ) %>%
     e_legend(show=FALSE) %>%
     e_x_axis(splitLine=list(show=FALSE), 
