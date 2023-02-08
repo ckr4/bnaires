@@ -59,7 +59,6 @@ plot_w <- function(c_sel, bill_sel, wealth) {
 
   df_weight$x <- factor(df_weight$x, levels = unique(df_weight$x))
   
-  # plot size should be ~ 8w x 5.2h
   # Create plot
   ggplot(df_weight, aes(label= x,
                         values = round(weight / df_const[sel,2]),
