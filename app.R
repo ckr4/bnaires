@@ -14,14 +14,16 @@ source("plotWealthHeight.R")
 source("plotWealthComp.R")
 source("plotWealthVs.R")
 source("modalUIs.R")
+source("insets.R")
 
 # register github board
-#board_register_github(repo="ckr4/wealthComp", token="this will not work without the token")
+board_register_github(repo="ckr4/wealthComp", token="")
 
 # Get data from board -----> Has to be registered first
 wealth <- pin_get('bnaires', board='github')
 fict_char <- pin_get('fict-char', board='github')
 hist_fig <- pin_get('hist-fig', board='github')
+rich_folk <- pin_get('rich-folk', board='github')
 
 # Define UI
 ui <- function(request) {
@@ -48,12 +50,12 @@ ui <- function(request) {
         
         useShinyjs(),
   
-        tags$head(tags$style(HTML('#sidebar {margin: 0px; 
+        tags$head(tags$style(HTML('#sidebar {margin: 0px; width: 320px;
                                   padding: 0px 10px 8px 10px; border-width: 0px}'),
                              HTML('#mainpan {margin: 0px; 
                                   padding: 0px; border-width: 20px}'))),
         
-        sidebarPanel(id='sidebar', width=4,
+        sidebarPanel(id='sidebar',
 
           div(id="csel_pi",
               pickerInput(
@@ -88,41 +90,42 @@ ui <- function(request) {
           ),
             
           fluidRow(id='fr_denom',
-            column(width=8, offset = 0, style='padding-left:4px;
-                   padding-right:0px;',
-                   h6(style="text-align: center;", "Denomination ($):")
+            column(width=6, align='center',
+                   h6("Denomination ($):")
                    ),
-            column(width=4, offset = 0, style='padding-right:8x;
-                   padding-left:0px;',
+            column(width=6, align='center',
                    selectInput(
                      inputId="d_sel",
                      label=NULL,
                      width='80px',
-                     choices=c(1,5,10,20,50,100))),
+                     choices=c(1,5,10,20,50,100),
+                     selected='100')),
             tags$style("#fr_denom {padding-bottom=0px;")
             
           ), # close fluidRow
           
-          fluidRow(id="fr_states",
-            column(id="col_clear", width=6, 
-                   actionButton("clear_l", "Reset", width='100%'),
-                   ), tags$style("#col_clear {padding-right:4px; margin-right:0px;}"),
-            column(id="col_rand", width=6,
-                   actionButton("rand_l", "Random", width='100%')
-                   ), tags$style("#col_rand {padding-left:4px; margin-left:0px;}"),
-            
-          ), tags$style("#fr_states {margin-top:0px; margin-bottom:12px;}"),
-  
+
+          actionButton("clear_l", "Reset", width='100%'),
+ 
+          actionButton("rand_l", "Random", width='100%'),
+          
+          actionButton("incl_me", "Include me", width='100%'),
+          
           bookmarkButton(id="bm_page", width='100%'), 
-          tags$style('#bm_page {margin-bottom:24x;}'),
+          tags$style('#clear_l {margin-bottom:4px;}
+                      #rand_l {margin-bottom:4px;}
+                      #incl_me {margin-bottom:4px;}
+                      #bm_page {margin-bottom:0px;}
+                      '
+          ),
           
           textOutput("dol_info", container=tags$h5),
-          tags$style('#dol_info {text-align: center; margin-top:20px;'),
+          tags$style('#dol_info {text-align: center; margin-top:12px;'),
           
         ), # close sidebarPanel
         
         # create plots
-        mainPanel(id='mainpan', width=8,
+        absolutePanel(id='mainpan',
 
           tabsetPanel(
             id="tabs", type="pills",
@@ -130,33 +133,52 @@ ui <- function(request) {
             tabPanel(id="tab_l", "Length", width=10,
               value=1,
               echarts4rOutput("length", height="492px", width="700px"),
+              absolutePanel(
+                echarts4rOutput("user_l", height="492px", width="168px"),
+                left="654px", width="190px", top="43px", height="500px",
+                tags$style("#user_l {border-left: 2px solid white}")
+              )
             ),
             
             tabPanel(id="tab_h", "Height",
               value=2,
-              echarts4rOutput("height", height="492px", width="700px"),
+              echarts4rOutput("height", height="492px", width="690px"),
+              absolutePanel(
+                
+                echarts4rOutput("user_h", height="492px", width="134px"),
+                left="636px", width="154px", top="43px", height="500px"
+              )
             ),
 
             tabPanel("Weight",
               value=3,
               plotOutput("weight", height="542px", width="700px"),
+              absolutePanel(
+                plotOutput("user_w", height="542px", width="148px"),
+                left="692px", width="180px", top="43px", height="542px",
+                tags$style("#user_w {border-left: 2px solid white}")
+              )
             ),
 
             tabPanel("Comparison",
               value=4,
-              plotlyOutput(outputId="comp", height="542px", width="700px")
+              plotlyOutput(outputId="comp", height="660px", width="700px")
             ),
 
             tabPanel("Versus",
               value=5,
               echarts4rOutput("versus", height="408px", width="762px"),
+              absolutePanel(
+                echarts4rOutput("user_v", height="408px", width="150px"),
+                left="734px", width="164px", top="43px", height="408px",
+              ),
               fluidRow(
                 column(4, offset=0, style='padding:0px 0px 0px 10px;;',
                   radioButtons(
                     inputId="vs",
                     label=h5("Versus"),
-                    choiceNames=c("Fictional Characters", "Historical Figures"),
-                    choiceValues=c("f", "h")
+                    choiceNames=c("Fictional Characters", "Historical Figures", "Richest Celebrities"),
+                    choiceValues=c("f", "h", "c")
                   )
                 ),
                 column(8, offset=0, style='padding:0px;',
@@ -170,7 +192,8 @@ ui <- function(request) {
 
             ) # close Versus tabPanel
 
-          ) # close tabsetPanel
+          ),
+          left='370px', width='900px',top='50px',height='600px' # close tabsetPanel
 
         ) # close mainPanel 
   ) # close fluidPage
@@ -191,12 +214,38 @@ server <- function(input, output, session) {
   
   onBookmark(function(state) {
     state$values$current_tab <- input$tabs
-    if (input$tabs==5) {state$values$versus_sel <- input$vs_inp}
+    state$values$d_sel <- input$d_sel
+    if (input$tabs==5) {
+      state$values$versus_sel <- input$vs_inp
+      state$values$versus <- input$vs
+    }
   })
   
   onRestore(function(state) {
-    updateTabsetPanel(session, "tabs", selected=state$values$current_tab)
-    if (state$values$current_tab==5) {vs_inp=state$values$versus_sel}
+    req(state$values)
+      updateTabsetPanel(session, "tabs", selected=state$values$current_tab)
+  })
+  
+  onRestored(function(state) {
+    if (state$values$current_tab==2) {enable("d_sel")}
+    else if (state$values$current_tab==3) {enable("d_sel")}
+    updateSelectInput(session, "d_sel", selected=state$values$d_sel)
+    if (state$values$current_tab==5) {
+      if (state$values$versus == "f") {
+        updatePickerInput(session,
+                          inputId = "vs_inp",
+                          choices = c(state$values$versus_sel, fict_char$Name))
+      } else if (state$values$versus == "h") {
+        updatePickerInput(session,
+                          inputId = "vs_inp",
+                          choices = c(state$values$versus_sel, hist_fig$Name))
+      } #else if (state$values$versus == "c") {
+      #   updatePickerInput(session,
+      #                     inputID = "vs_inp",
+      #                     choice = c(states$values$versus_sel, rich_folk$Name))
+      # }
+    }
+      
   })
   
   observeEvent(input$bm_page, {
@@ -216,7 +265,7 @@ server <- function(input, output, session) {
     validate(need(!is.null(input$tabs), ""))
     if (input$tabs == 1) {
       disable("d_sel")
-      updateSelectInput(session, "d_sel", selected=100)
+      updateSelectInput(session, "d_sel", selected='100')
       updatePickerInput(session, "c_sel", options=list('actions-box' = FALSE))
     } else if (input$tabs == 4) {
       disable("d_sel")
@@ -245,6 +294,34 @@ server <- function(input, output, session) {
     ))
   })
   
+  observeEvent(input$incl_me, {
+    showModal(inclModal())
+  })
+  
+  observeEvent(input$incl_ok, {
+    if (!is.null(input$ti_incl)) {
+      ti_inp <- as.character(input$ti_incl)
+    }
+    if (!is.null(input$ti_incl) && nchar(ti_inp) > 0 && ti_inp != "" &&
+        nchar(ti_inp) <= 20 && input$ni_incl >= 0 && input$ni_incl < 1000000000) {
+      values$ti_inp <- ti_inp
+      values$ni_incl <- input$ni_incl
+      removeModal()
+    } else {
+      name_fail = nw_fail_l = nw_fail_h = FALSE
+      if (!is.null(input$ti_incl) && 
+          nchar(ti_inp) == 0 | ti_inp == "" | nchar(ti_inp) > 20) {
+        name_fail = TRUE} 
+      if (input$ni_incl < 0) {nw_fail_l = TRUE} 
+      if (input$ni_incl >= 1000000000) {nw_fail_h = TRUE} 
+      showModal(inclModal(name_fail, nw_fail_l, nw_fail_h))
+    }
+  })
+  
+  observeEvent(input$mod_canx, {
+    removeModal()
+  })
+  
   # Clear selections on button press
   observeEvent(input$clear_l, {
     updatePickerInput(session, "c_sel", selected="")
@@ -252,6 +329,7 @@ server <- function(input, output, session) {
     updateSelectInput(session, "d_sel", selected=100)
     updateSliderInput(session, "slider_age", 
                       value=c(min(wealth$Age), max(wealth$Age)))
+    values$ti_inp = ""
   })
   
   # Get random selection of names and denomination
@@ -299,6 +377,10 @@ server <- function(input, output, session) {
       updatePickerInput(session,
                         inputId = "vs_inp",
                         choices = hist_fig$Name)
+    } else if (input$vs == "c") {
+      updatePickerInput(session,
+                        inputId = "vs_inp",
+                        choices = rich_folk$Name)
     }
   }, ignoreInit=TRUE)
 
@@ -313,6 +395,15 @@ server <- function(input, output, session) {
   
   # create plots
   
+  output$user_l <-
+
+    renderEcharts4r({
+      if (!is.null(values$ti_inp) && values$ti_inp != "" &&
+          values$ni_incl >= 0 && values$ni_incl < 1000000000) {
+        inset_l(values$ti_inp, values$ni_incl)
+      }
+    })
+  
   output$length <-
 
     renderEcharts4r({
@@ -324,10 +415,21 @@ server <- function(input, output, session) {
       )
 
       # if correct # selected, create plot
-      if (length(values$c_sel)>0 & length(values$c_sel)<16) {
-        plot_l(match(values$c_sel, wealth$Name), wealth)
+      if (length(values$c_sel)>0 && length(values$c_sel)<16) {
+        pl <- plot_l(match(values$c_sel, wealth$Name), wealth)
       }
-      
+
+    })
+  
+  output$user_h <-
+    
+    renderEcharts4r({
+      if (length(values$c_sel)>0 && length(values$c_sel)<6 &&
+          !is.null(values$ti_inp) && values$ti_inp != "" &&
+          values$ni_incl >= 0 && values$ni_incl < 1000000000) {
+        inset_h(match(values$c_sel, wealth$Name), as.numeric(values$d_sel), 
+                wealth, values$ti_inp, values$ni_incl)
+      }
     })
   
   output$height <-
@@ -341,13 +443,26 @@ server <- function(input, output, session) {
       )
       
       # if correct # selected, create plot
-      if (length(values$c_sel)>0 & length(values$c_sel)<6) {
+      if (length(values$c_sel)>0 && length(values$c_sel)<6) {
         plot_h(match(values$c_sel, wealth$Name), as.numeric(values$d_sel), wealth)
       }
     
     })
 
 
+  output$user_w <-
+    
+    renderPlot({
+      
+      if (length(values$c_sel)>0 && length(values$c_sel)<6 && 
+          !is.null(values$ti_inp) && values$ti_inp != "" &&
+          values$ni_incl >= 0 && values$ni_incl < 1000000000) {
+        two_l <- ifelse(max(nchar(values$c_sel)) > 18, TRUE, FALSE)
+        inset_w(as.numeric(values$d_sel), values$ti_inp, values$ni_incl, two_l)
+      }
+      
+    })
+  
   output$weight <- 
     
     renderPlot({
@@ -359,7 +474,7 @@ server <- function(input, output, session) {
       )
       
       # if correct # selected, create plot
-      if (length(values$c_sel)>0 & length(values$c_sel)<6) {
+      if (length(values$c_sel)>0 && length(values$c_sel)<6) {
         plot_w(match(values$c_sel, wealth$Name), as.numeric(values$d_sel), wealth)
       }
       
@@ -370,13 +485,44 @@ server <- function(input, output, session) {
     renderPlotly({
       
       # create plot
-      if (length(values$c_sel) > 0) {
-        plot_c(match(values$c_sel, wealth$Name), wealth, hist_fig, fict_char)
+      user_ind = FALSE
+      user_inp = c()
+      selected = match(values$c_sel, wealth$Name)
+      if (!is.null(values$ti_inp) && values$ti_inp != "" &&
+          values$ni_incl >= 0 && values$ni_incl < 1000000000) {
+        user_inp <- c( 
+          Name=values$ti_inp, NetWorth=values$ni_incl / 1000000000,
+          Change="", Age=0, Source="", Country="", Name2=values$ti_inp)
+          user_ind = TRUE
+      }
+      if (length(selected) > 0) {
+        plot_c(selected, wealth, hist_fig, fict_char, rich_folk, user_inp, user_ind)
       } else {
-        plot_c(0, wealth, hist_fig, fict_char)
+        plot_c(0, wealth, hist_fig, fict_char, rich_folk, user_inp, user_ind)
       }
     })
   
+  output$user_v <-
+    
+    renderEcharts4r({
+      if (length(values$c_sel)>0 && length(values$c_sel)<6 &&
+          !is.null(values$ti_inp) && values$ti_inp != "" &&
+          values$ni_incl >= 0 && values$ni_incl < 1000000000) {
+        
+        if (input$vs == "h") {vs_sel = match(values$vs_inp, hist_fig$Name)}
+        if (input$vs == "f") {vs_sel = match(values$vs_inp, fict_char$Name)}
+        if (input$vs == "c") {vs_sel = match(values$vs_inp, rich_folk$Name)}
+        
+        # if correct # selected, create plot
+        if (length(values$c_sel) > 0 && length(values$c_sel) < 6 && 
+            length(values$vs_inp) > 0 && !is.na(vs_sel)) {
+          inset_v(match(values$c_sel, wealth$Name), input$vs, vs_sel, 
+                  wealth, hist_fig, fict_char, rich_folk, values$ti_inp, 
+                  values$ni_incl)
+        }
+      }
+    })
+
   output$versus <-
     
     renderEcharts4r({
@@ -391,6 +537,7 @@ server <- function(input, output, session) {
       # Set vs_sel
       if (input$vs == "h") {vs_sel = match(values$vs_inp, hist_fig$Name)}
       if (input$vs == "f") {vs_sel = match(values$vs_inp, fict_char$Name)}
+      if (input$vs == "c") {vs_sel = match(values$vs_inp, rich_folk$Name)}
       
       # if correct # selected, create plot
       if (length(values$c_sel) > 0 & 
@@ -398,7 +545,7 @@ server <- function(input, output, session) {
           length(values$vs_inp) > 0 &
           !is.na(vs_sel)) {
         plot_vs(match(values$c_sel, wealth$Name), input$vs, vs_sel, 
-                wealth, hist_fig, fict_char)
+                wealth, hist_fig, fict_char, rich_folk)
       }
       
     })
@@ -407,4 +554,3 @@ server <- function(input, output, session) {
 
 # Create Shiny app ----
 shinyApp(ui = ui, server = server, enableBookmarking = "url")
-
