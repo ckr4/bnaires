@@ -1,5 +1,4 @@
 
-
 aboutUI <- navlistPanel(widths=c(3,9),
                         
                         tabPanel(
@@ -30,7 +29,7 @@ aboutUI <- navlistPanel(widths=c(3,9),
                         tabPanel(
                           title="Sources", 
                           
-                          tags$b(tags$u("Current billionaires")),
+                          tags$b(tags$u("Current billionaires and richest celebrities")),
                           br(),
                           a(href='https://www.forbes.com/real-time-billionaires/#1cf229123d78', 
                                  "Forbes: The World's Real-Time Billionaires",
@@ -152,10 +151,48 @@ helpUI <- navlistPanel(widths=c(3,9),
                          title="Versus",
                          p("Select up to 5 current billionaires to display using 
             drop down list in sidebar, which can be filtered using age slider and
-            country/territory drop down list. Use the historical figure and 
-            fictional character buttons to determine which list is available in
-            the drop down list, then select the figure or character to use as
-            the basis for comparison to the current billionaires you have
-            selected.")
+            country/territory drop down list. Use the historical figure, 
+            fictional character and richest celebrities buttons to determine which 
+            list is available in the drop down list, then select the figure or 
+            character to use as the basis for comparison to the current billionaires
+            you have selected.")
                        ) # Close Versus tabPanel
+                       
 ) # Close navlistPanel
+
+inclModal <- function(name_fail = FALSE, nw_fail_l = FALSE, nw_fail_h = FALSE) { 
+  modalDialog(
+    fluidRow(
+      column(12, align='center',
+        textInput("ti_incl", "Enter your name"),
+        if (name_fail) {HTML("Ensure name is between 1 and 20 characters.")},
+        numericInput("ni_incl", "Enter your net worth", value=121700, min=0, max=999999999),
+        if (nw_fail_l) {
+          HTML("I don't doubt that you owe more than you've got, but I can't <br>
+          graph that, so please pretend you have 0 or more dollars.") },
+        if (nw_fail_h) {HTML("You don't have a billion dollars. Calm down.")},
+        h6("* The median networth of a U.S. household was $121,700 in 2019")
+      )
+    ),
+    footer = tagList(
+      fluidRow(
+        column(12, align='center',
+          actionButton("mod_canx", "Cancel", width='100px', 
+                       style='color: white; 
+                              border-radius=5px;
+                              font-weight: bold;'),
+          actionButton("incl_ok", "OK", width='100px', 
+                       style='color: white; 
+                              border-radius=5px; 
+                              font-weight: bold;')
+        )
+      ),
+      tags$style(".modal-dialog {width: fit-content !important;}
+                  #mod_canx {background-color: #4582ec;}
+                  #mod_canx:hover {background-color: #2a6bda}
+                  #incl_ok {background-color: #4582ec;} 
+                  #incl_ok:hover {background-color: #2a6bda;")
+
+    )
+  )
+}
