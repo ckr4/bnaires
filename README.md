@@ -1,3 +1,5 @@
+This app is hosted online at https://3ogq5s-chad-kite.shinyapps.io/wealthComp-app/
+
 A billion is a very big number. So big, in fact, that it's just about impossible 
   to wrap your head around. That doesn't really matter most of the time, but when it
   comes to wealth inequality, understanding the sheer scale of that number matters. 
