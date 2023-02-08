@@ -2,9 +2,8 @@
 library(ggtext)
 library(ggplot2)
 library(plotly)
-library(pins)
 
-plot_c <- function(c_sel, wealth, hist_fig, fict_char) {
+plot_c <- function(c_sel, wealth, hist_fig, fict_char, rich_folk, user_inp, user_ind) {
   
   # get and organize data
   if (length(c_sel)>=1) {
@@ -13,18 +12,31 @@ plot_c <- function(c_sel, wealth, hist_fig, fict_char) {
   } else {
     w_all <- data.frame(colnames(wealth)[c(1,2,5:7)])
   }
+  
   h_all <- hist_fig[,c(1,3,2,5,6)]
   h_all$cat <- rep('Historical Figure', length(h_all$Name))
   f_all <- fict_char[,c(1,4,3,6,7)]
   f_all$cat <- rep('Fictional Character', length(f_all$Name))
+  c_all <- rich_folk[,c(1,2,3)]
+  c_all$Source <- rep("", length(c_all$Name))
+  c_all$Country <- rep("", length(c_all$Name))
+  c_all$cat <- rep('Rich Celebrity', length(c_all$Name))
   colnames(h_all) <- colnames(w_all)
   colnames(f_all) <- colnames(w_all)
+  colnames(c_all) <- colnames(w_all)
   
-  # select records from current, hist, and fict, and combine data
-  #c_sel <- c(1:25)
-  #h_sel <- c(1:5)
-  #f_sel <- c(1:5)
-  df_all <- rbind(w_all, h_all, f_all)
+  df_all <- rbind(w_all, h_all, f_all, c_all)
+  # if there is user input, convert it to a df, format # and add to df_all
+  if (user_ind) {
+    user_df <- data.frame(Name = user_inp[1],
+                          NetWorth = as.numeric(user_inp[2]),
+                          Source = user_inp[5],
+                          Country = user_inp[6],
+                          Name2 = user_inp[7],
+                          cat = strsplit(user_inp[1], " ")[[1]][1])
+    df_all <- rbind(df_all, user_df) 
+  }
+  # sort df_all by NetWorth in descending order
   df_all <- df_all[order(-df_all$NetWorth),]
   
   # determine sort based on NetWorth (0) or Name (1)
