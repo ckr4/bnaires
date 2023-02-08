@@ -1,17 +1,15 @@
 # libraries
-library(ggtext)
-library(readr)
 library(echarts4r)
-library(echarts4r.assets)
-library(pins)
 
-plot_vs <- function(c_sel, vs, vs_sel, wealth, hist_fig, fict_char) {
+plot_vs <- function(c_sel, vs, vs_sel, wealth, hist_fig, fict_char, rich_folk) {
   
   ### subset and sort current list (country, source, gender, age, etc.)
-  #c_sel <- c(1:5)
   df_c <- wealth[c_sel,]
   df_c <- df_c[order(-df_c$NetWorth),]
   
+  rich_folk$Source <- rep("", length(rich_folk$Name))
+  rich_folk$Country <- rep("", length(rich_folk$Name))
+
   ### current list / subset in terms of historical figure or fictional character
   # get selection (hist or fict) then get record and prep for plotting
   #vs <- 'f'
@@ -21,12 +19,18 @@ plot_vs <- function(c_sel, vs, vs_sel, wealth, hist_fig, fict_char) {
     vs_img <- hist_fig[vs_sel, 7]
     vs_lab_col <- hist_fig[vs_sel, 9]
     vs_img_src <- hist_fig[vs_sel, 8]
-  } else {
+  }  else if (vs == 'f') {
     vs_comp <- fict_char[vs_sel,c(1,4,2,6,7)]
     colnames(vs_comp) <- c('Name', 'NetWorth', 'Source', 'Country','Name2')
     vs_img <- fict_char[vs_sel, 8]
     vs_lab_col <- fict_char[vs_sel, 10]
     vs_img_src <- fict_char[vs_sel, 9]
+  } else if (vs == 'c') {
+    vs_comp <- rich_folk[vs_sel,c(1,2,7,8,3)]
+    colnames(vs_comp) <- c('Name', 'NetWorth', 'Source', 'Country','Name2')
+    vs_img <- rich_folk[vs_sel, 4]
+    vs_lab_col <- rich_folk[vs_sel, 6]
+    vs_img_src <- rich_folk[vs_sel, 5]
   }
   
   vs_comp$NetWorth <- as.numeric(vs_comp$NetWorth)
@@ -74,7 +78,7 @@ plot_vs <- function(c_sel, vs, vs_sel, wealth, hist_fig, fict_char) {
                         }
                         "))
     ) %>%
-    e_pictorial(NetWorth, symbol, # remove bg image
+    e_pictorial(NetWorth, symbol, 
                 symbolRepeat=FALSE, z=-998,
                 barWidth='96%',
                 symbolClip=FALSE,
@@ -155,6 +159,5 @@ plot_vs <- function(c_sel, vs, vs_sel, wealth, hist_fig, fict_char) {
 
 }
 
-#grDevices::dev.size("px")
-#plot_vs(c(1,2,3,4,5), "h", 10, wealth, hist_fig, fict_char)
 
+#plot_vs(c(1,2,3,4,5), "c", 10, wealth, hist_fig, fict_char, rich_folk)
